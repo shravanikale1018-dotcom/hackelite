@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Accountability Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen font-sans text-gray-100">
+
+    <!-- Header/Navbar -->
+    <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 shadow-2xl backdrop-blur-lg bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-2 rounded-lg">
+                        <i class="fas fa-tasks text-blue-600 text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white">Meeting Tracker</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleTheme()" class="p-2 hover:bg-blue-700 rounded-lg transition">
+                        <i class="fas fa-moon text-white"></i>
+                    </button>
+                    <div class="text-sm text-blue-100">
+                        <div id="taskCount" class="font-semibold">0 Tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Tabs -->
+        <div class="flex space-x-4 mb-8 border-b border-slate-700">
+            <button onclick="switchTab('meetings')" class="tab-btn active px-6 py-3 font-semibold text-lg border-b-3 border-blue-500 text-blue-400 transition">
+                <i class="fas fa-calendar-alt mr-2"></i>Meetings
+            </button>
+            <button onclick="switchTab('tasks')" class="tab-btn px-6 py-3 font-semibold text-lg border-b-3 border-transparent text-gray-400 hover:text-gray-300 transition">
+                <i class="fas fa-check-circle mr-2"></i>All Tasks
+            </button>
+            <button onclick="switchTab('analytics')" class="tab-btn px-6 py-3 font-semibold text-lg border-b-3 border-transparent text-gray-400 hover:text-gray-300 transition">
+                <i class="fas fa-chart-bar mr-2"></i>Analytics
+            </button>
+        </div>
+
+        <!-- MEETINGS TAB -->
+        <div id="meetings-tab" class="tab-content">
+            <!-- Add Meeting Form -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="md:col-span-1">
+                    <div class="bg-gradient-to-br from-slate-700 to-slate-800 p-6 rounded-2xl shadow-xl border border-slate-600 sticky top-24">
+                        <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                            <i class="fas fa-plus-circle mr-2 text-green-400"></i>Create Meeting
+                        </h2>
+                        <form id="meetingForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Meeting Title</label>
+                                <input type="text" id="meetingTitle" placeholder="e.g., Sprint Planning" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Meeting Date</label>
+                                <input type="date" id="meetingDate" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Description</label>
+                                <textarea id="meetingDescription" placeholder="Meeting details..." rows="4"
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 active:scale-95">
+                                <i class="fas fa-check mr-2"></i>Create Meeting
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Meetings List -->
+                <div class="md:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-white">
+                            <i class="fas fa-list mr-2 text-blue-400"></i>Scheduled Meetings
+                        </h2>
+                        <input type="text" id="meetingSearch" placeholder="Search meetings..." 
+                            class="px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none w-40">
+                    </div>
+                    <div id="meetingsList" class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="fas fa-inbox text-4xl mb-2"></i>
+                            <p>No meetings yet. Create one to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASKS TAB -->
+        <div id="tasks-tab" class="tab-content hidden">
+            <!-- Add Task Form -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="md:col-span-1">
+                    <div class="bg-gradient-to-br from-slate-700 to-slate-800 p-6 rounded-2xl shadow-xl border border-slate-600 sticky top-24">
+                        <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                            <i class="fas fa-tasks mr-2 text-purple-400"></i>New Task
+                        </h2>
+                        <form id="taskForm" class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Select Meeting</label>
+                                <select id="taskMeetingId" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    <option value="">Choose Meeting</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Task Name</label>
+                                <input type="text" id="taskName" placeholder="Task description" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Assign To</label>
+                                <input type="text" id="assignedTo" placeholder="Team member" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Deadline</label>
+                                <input type="date" id="taskDeadline" required
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Priority</label>
+                                <select id="taskPriority"
+                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    <option value="Low">🟢 Low</option>
+                                    <option value="Medium">🟡 Medium</option>
+                                    <option value="High">🔴 High</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 active:scale-95">
+                                <i class="fas fa-plus mr-2"></i>Add Task
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="md:col-span-3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-white">
+                            <i class="fas fa-tasks mr-2 text-purple-400"></i>Task Board
+                        </h2>
+                        <div class="flex space-x-2">
+                            <select id="filterPriority" class="px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:outline-none">
+                                <option value="">All Priorities</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                            <select id="filterStatus" class="px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:outline-none">
+                                <option value="">All Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Overdue">Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Task Table -->
+                    <div class="bg-slate-700 rounded-2xl shadow-xl overflow-hidden border border-slate-600">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="bg-gradient-to-r from-slate-600 to-slate-700 border-b border-slate-500">
+                                        <th class="px-6 py-3 text-left font-bold text-gray-300">Meeting</th>
+                                        <th class="px-6 py-3 text-left font-bold text-gray-300">Task</th>
+                                        <th class="px-6 py-3 text-left font-bold text-gray-300">Assigned</th>
+                                        <th class="px-6 py-3 text-left font-bold text-gray-300">Deadline</th>
+                                        <th class="px-6 py-3 text-center font-bold text-gray-300">Priority</th>
+                                        <th class="px-6 py-3 text-center font-bold text-gray-300">Status</th>
+                                        <th class="px-6 py-3 text-center font-bold text-gray-300">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="taskTableBody" class="divide-y divide-slate-600">
+                                    <tr class="text-center py-8">
+                                        <td colspan="7" class="py-8 text-gray-400">
+                                            <i class="fas fa-tasks text-4xl mb-2"></i>
+                                            <p>No tasks yet. Add one to get started!</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="analytics-tab" class="tab-content hidden">
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-2xl shadow-xl border border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-200 text-sm font-semibold">Total Meetings</p>
+                            <p class="text-4xl font-bold text-white mt-2" id="totalMeetings">0</p>
+                        </div>
+                        <i class="fas fa-calendar text-4xl text-blue-300 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-green-600 to-green-700 p-6 rounded-2xl shadow-xl border border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-200 text-sm font-semibold">Completed Tasks</p>
+                            <p class="text-4xl font-bold text-white mt-2" id="completedTasks">0</p>
+                        </div>
+                        <i class="fas fa-check-circle text-4xl text-green-300 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-orange-600 to-orange-700 p-6 rounded-2xl shadow-xl border border-orange-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-orange-200 text-sm font-semibold">Pending Tasks</p>
+                            <p class="text-4xl font-bold text-white mt-2" id="pendingTasks">0</p>
+                        </div>
+                        <i class="fas fa-hourglass text-4xl text-orange-300 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-red-600 to-red-700 p-6 rounded-2xl shadow-xl border border-red-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-red-200 text-sm font-semibold">Overdue Tasks</p>
+                            <p class="text-4xl font-bold text-white mt-2" id="overdueTasks">0</p>
+                        </div>
+                        <i class="fas fa-exclamation-circle text-4xl text-red-300 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-700 to-slate-800 p-6 rounded-2xl shadow-xl border border-slate-600">
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <i class="fas fa-chart-pie mr-2 text-blue-400"></i>Task Completion Rate
+                </h3>
+                <div class="bg-slate-600 rounded-lg p-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1">
+                            <div class="w-full bg-slate-500 rounded-full h-4" id="completionBar">
+                                <div class="bg-gradient-to-r from-green-500 to-blue-500 h-4 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-white" id="completionPercentage">0%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Meeting Modal -->
+    <div id="editMeetingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full border border-slate-600 animate-modal">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">Edit Meeting</h3>
+                <button onclick="closeEditModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="editMeetingForm" class="p-6 space-y-4">
+                <input type="hidden" id="editMeetingId">
+                <input type="text" id="editMeetingTitle" placeholder="Meeting Title" class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+                <input type="date" id="editMeetingDate" class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:outline-none">
+                <textarea id="editMeetingDescription" placeholder="Description" class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none" rows="3"></textarea>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-save mr-2"></i>Save Changes
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hidden z-50 animate-slide-in"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
