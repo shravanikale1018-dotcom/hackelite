@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Accountability Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">Meeting Accountability Tracker</h1>
+
+        <!-- Add Meeting Form -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Add Meeting</h2>
+            <form id="meetingForm" class="space-y-4">
+                <input type="text" id="meetingTitle" placeholder="Meeting Title" class="w-full p-2 border rounded">
+                <input type="date" id="meetingDate" class="w-full p-2 border rounded">
+                <textarea id="meetingDescription" placeholder="Description" class="w-full p-2 border rounded"></textarea>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Meeting</button>
+            </form>
+        </div>
+
+        <!-- Add Task Form -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Add Task</h2>
+            <form id="taskForm" class="space-y-4">
+                <select id="taskMeetingId" class="w-full p-2 border rounded">
+                    <option value="">Select Meeting</option>
+                </select>
+                <input type="text" id="taskName" placeholder="Task Name" class="w-full p-2 border rounded">
+                <input type="text" id="assignedTo" placeholder="Assign To" class="w-full p-2 border rounded">
+                <input type="date" id="taskDeadline" class="w-full p-2 border rounded">
+                <select id="taskPriority" class="w-full p-2 border rounded">
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Task</button>
+            </form>
+        </div>
+
+        <!-- Task List Table -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Tasks</h2>
+            <table class="w-full table-auto border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border px-4 py-2">Meeting</th>
+                        <th class="border px-4 py-2">Task</th>
+                        <th class="border px-4 py-2">Assigned To</th>
+                        <th class="border px-4 py-2">Deadline</th>
+                        <th class="border px-4 py-2">Priority</th>
+                        <th class="border px-4 py-2">Status</th>
+                        <th class="border px-4 py-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody">
+                    <!-- JS will populate tasks here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

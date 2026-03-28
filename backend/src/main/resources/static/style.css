@@ -1,0 +1,884 @@
+/* ================================
+   GLOBAL STYLES & ANIMATIONS
+================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #1e40af;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --light: #f3f4f6;
+    --dark: #1f2937;
+    --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    min-height: 100vh;
+}
+
+/* ================================
+   MODERN ANIMATIONS
+================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes scale-bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ================================
+   GLASSMORPHISM EFFECTS
+================================ */
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ================================
+   CARDS & CONTAINERS
+================================ */
+
+.card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+}
+
+.card:hover {
+    border-color: rgba(100, 116, 139, 0.5);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ================================
+   MEETING CARDS
+================================ */
+
+.meeting-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border: 1px solid rgba(71, 85, 105, 0.4);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+.meeting-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.meeting-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.meeting-card:hover::before {
+    opacity: 1;
+}
+
+.meeting-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.meeting-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+}
+
+.meeting-card-date {
+    font-size: 14px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.meeting-card-description {
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.meeting-card-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* ================================
+   FORMS & INPUTS
+================================ */
+
+input[type="text"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    transition: var(--transition);
+    background-color: rgba(51, 65, 85, 0.5);
+    border: 1px solid rgba(71, 85, 105, 0.5);
+    color: #f1f5f9;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+    background-color: rgba(51, 65, 85, 0.7);
+}
+
+select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+button {
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 12px 24px;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* ================================
+   NAVIGATION
+================================ */
+
+.nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    color: #60a5fa;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 1px;
+}
+
+/* ================================
+   LOADING STATES
+================================ */
+
+.loading-shimmer {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+    .meeting-card {
+        padding: 16px;
+    }
+
+    .meeting-card-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .meeting-card-actions {
+        justify-content: center;
+    }
+}
+
+/* ================================
+   UTILITY CLASSES
+================================ */
+
+.text-gradient {
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shadow-glow {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-glow-purple {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+}
+
+.shadow-glow-green {
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+    color: white;
+    padding: 10px 20px;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+    color: white;
+    padding: 10px 20px;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+}
+
+/* ================================
+   TABS
+================================ */
+
+.tab-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+}
+
+.tab-btn:not(.active) {
+    color: #94a3b8;
+}
+
+.tab-btn:hover:not(.active) {
+    color: #cbd5e1;
+}
+
+.tab-content {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.tab-content.hidden {
+    display: none;
+}
+
+/* ================================
+   TABLE STYLES
+================================ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: linear-gradient(90deg, #334155 0%, #1e293b 100%);
+}
+
+th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 700;
+    color: #cbd5e1;
+    border-bottom: 2px solid #475569;
+}
+
+td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #334155;
+    color: #e2e8f0;
+}
+
+tbody tr {
+    transition: var(--transition);
+}
+
+tbody tr:hover {
+    background-color: #334155;
+}
+
+tbody tr.bg-red-100 {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+tbody tr.bg-green-100 {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+tbody tr.bg-yellow-100 {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* ================================
+   BADGES & STATUS
+================================ */
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #86efac;
+    border: 1px solid #10b981;
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid #ef4444;
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+    border: 1px solid #f59e0b;
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid #3b82f6;
+}
+
+/* ================================
+   MEETING CARD
+================================ */
+
+.meeting-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px;
+    transition: var(--transition);
+    cursor: pointer;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.meeting-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    transform: translateY(-4px);
+}
+
+.meeting-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.meeting-card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+}
+
+.meeting-card-date {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.meeting-card-description {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.meeting-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.meeting-card-actions button {
+    flex: 1;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+}
+
+/* ================================
+   TASK ROW STYLES
+================================ */
+
+.task-row-high {
+    border-left: 4px solid #ef4444;
+}
+
+.task-row-medium {
+    border-left: 4px solid #f59e0b;
+}
+
+.task-row-low {
+    border-left: 4px solid #10b981;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #94a3b8;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.125rem;
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .meeting-card-actions {
+        flex-direction: column;
+    }
+
+    .meeting-card-actions button {
+        width: 100%;
+    }
+
+    .tab-btn {
+        font-size: 0.875rem;
+        padding: 12px 16px !important;
+    }
+
+    thead {
+        font-size: 0.875rem;
+    }
+
+    td {
+        padding: 10px 8px;
+        font-size: 0.875rem;
+    }
+
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 16px;
+    }
+
+    button {
+        font-size: 0.875rem;
+    }
+
+    table {
+        font-size: 0.75rem;
+    }
+
+    th, td {
+        padding: 8px 4px;
+    }
+
+    .meeting-card-title {
+        font-size: 1rem;
+    }
+
+    .tab-btn {
+        padding: 8px 12px !important;
+        font-size: 0.75rem;
+    }
+}
+
+/* ================================
+   SCROLLBAR STYLING
+================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* ================================
+   UTILITY CLASSES
+================================ */
+
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+/* ================================
+   DARK MODE (ACTIVE BY DEFAULT)
+================================ */
+
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1a1f2e 100%);
+    color: #e2e8f0;
+}
+
+/* ================================
+   THEME TOGGLE
+================================ */
+
+body.light-mode {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    color: #1e293b;
+}
+
+body.light-mode .card,
+body.light-mode .meeting-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%);
+    border-color: #e2e8f0;
+}
+
+body.light-mode .card:hover,
+body.light-mode .meeting-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+}
+
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+    background-color: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+    color: #64748b;
+}
+
+body.light-mode thead {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+body.light-mode th {
+    color: #334155;
+}
+
+body.light-mode td {
+    color: #1e293b;
+    border-bottom-color: #e2e8f0;
+}
+
+body.light-mode tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+body.light-mode .text-gray-300,
+body.light-mode .text-gray-400,
+body.light-mode .text-gray-500 {
+    color: #64748b !important;
+}
+
+body.light-mode .bg-slate-600,
+body.light-mode .bg-slate-700 {
+    background-color: #e2e8f0 !important;
+}
+
+body.light-mode .border-slate-500,
+body.light-mode .border-slate-600 {
+    border-color: #cbd5e1 !important;
+}

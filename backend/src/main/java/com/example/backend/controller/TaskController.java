@@ -47,6 +47,12 @@ public class TaskController {
         return taskService.markTaskCompleted(id);
     }
 
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable String id, @RequestBody Task task) {
+        task.setId(id);
+        return taskService.updateTask(task);
+    }
+
     // Delete task
     @DeleteMapping("/{id}")
     public void deleteTask(
