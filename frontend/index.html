@@ -7,92 +7,393 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen font-sans text-gray-100">
 
-    <!-- Header/Navbar -->
-    <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 shadow-2xl backdrop-blur-lg bg-opacity-95">
+    <!-- Enhanced Navigation -->
+    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-slate-700/50 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-white p-2 rounded-lg">
-                        <i class="fas fa-tasks text-blue-600 text-xl"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold text-white">Meeting Tracker</h1>
-                </div>
+                <!-- Logo & Brand -->
                 <div class="flex items-center space-x-4">
-                    <button onclick="toggleTheme()" class="p-2 hover:bg-blue-700 rounded-lg transition">
-                        <i class="fas fa-moon text-white"></i>
-                    </button>
-                    <div class="text-sm text-blue-100">
-                        <div id="taskCount" class="font-semibold">0 Tasks</div>
+                    <div class="relative">
+                        <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl shadow-lg">
+                            <i class="fas fa-calendar-check text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-black animate-pulse"></div>
                     </div>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">MeetTrack Pro</h1>
+                        <p class="text-xs text-slate-400 hidden sm:block">Accountability Made Simple</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex space-x-6">
+                        <button onclick="switchTab('dashboard')" class="nav-link active flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 hover:bg-slate-800/50">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button onclick="switchTab('meetings')" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 hover:bg-slate-800/50">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Meetings</span>
+                        </button>
+                        <button onclick="switchTab('tasks')" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 hover:bg-slate-800/50">
+                            <i class="fas fa-tasks"></i>
+                            <span>Tasks</span>
+                        </button>
+                        <button onclick="switchTab('analytics')" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 hover:bg-slate-800/50">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Analytics</span>
+                        </button>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <input type="text" id="globalSearch" placeholder="Search everything..." class="w-64 pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all relative">
+                            <i class="fas fa-bell text-gray-300 hover:text-white"></i>
+                            <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" class="p-2 hover:bg-slate-800/50 rounded-lg transition-all">
+                        <i class="fas fa-moon text-gray-300 hover:text-white"></i>
+                    </button>
+
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 hover:bg-slate-800/50 rounded-lg transition-all">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </button>
+
+                        <!-- User Dropdown -->
+                        <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl border border-slate-700 hidden">
+                            <div class="px-4 py-3 border-b border-slate-700">
+                                <p class="text-sm font-medium text-white">User Account</p>
+                                <p class="text-xs text-gray-400">Premium Member</p>
+                            </div>
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white">
+                                    <i class="fas fa-cog mr-2"></i>Settings
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white">
+                                    <i class="fas fa-question-circle mr-2"></i>Help
+                                </a>
+                                <div class="border-t border-slate-700 my-1"></div>
+                                <a href="#" class="block px-4 py-2 text-sm text-red-400 hover:bg-red-900/20">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 hover:bg-slate-800/50 rounded-lg transition-all">
+                        <i class="fas fa-bars text-gray-300"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden mt-4 pb-4 border-t border-slate-700/50">
+                <div class="flex flex-col space-y-2 pt-4">
+                    <button onclick="switchTab('dashboard')" class="nav-link mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('meetings')" class="nav-link mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Meetings</span>
+                    </button>
+                    <button onclick="switchTab('tasks')" class="nav-link mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tasks</span>
+                    </button>
+                    <button onclick="switchTab('analytics')" class="nav-link mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Hero Section -->
+    <section id="hero-section" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="text-center">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-8">
+                    <i class="fas fa-star text-blue-400 mr-2"></i>
+                    <span class="text-blue-300 text-sm font-medium">Welcome to MeetTrack Pro</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        Master Your
+                    </span>
+                    <br>
+                    <span class="text-white">Meeting Accountability</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Transform your team's productivity with intelligent meeting tracking, automated task management,
+                    and powerful analytics. Never miss a commitment again.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="switchTab('meetings')" class="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i>Get Started
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button onclick="switchTab('analytics')" class="group bg-slate-800/50 hover:bg-slate-700/50 text-white font-semibold py-4 px-8 rounded-xl border border-slate-600 hover:border-slate-500 transition-all duration-300">
+                        <i class="fas fa-chart-line mr-2"></i>View Analytics
+                    </button>
+                </div>
+
+                <!-- Stats Preview -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+                    <div class="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+                        <div class="text-3xl font-bold text-blue-400 mb-2" id="heroMeetings">0</div>
+                        <div class="text-sm text-gray-400">Active Meetings</div>
+                    </div>
+                    <div class="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+                        <div class="text-3xl font-bold text-green-400 mb-2" id="heroTasks">0</div>
+                        <div class="text-sm text-gray-400">Total Tasks</div>
+                    </div>
+                    <div class="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+                        <div class="text-3xl font-bold text-purple-400 mb-2" id="heroCompleted">0</div>
+                        <div class="text-sm text-gray-400">Completed</div>
+                    </div>
+                    <div class="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+                        <div class="text-3xl font-bold text-orange-400 mb-2" id="heroStreak">0</div>
+                        <div class="text-sm text-gray-400">Day Streak</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
+    </section>
+
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Tabs -->
-        <div class="flex space-x-4 mb-8 border-b border-slate-700">
-            <button onclick="switchTab('meetings')" class="tab-btn active px-6 py-3 font-semibold text-lg border-b-3 border-blue-500 text-blue-400 transition">
-                <i class="fas fa-calendar-alt mr-2"></i>Meetings
-            </button>
-            <button onclick="switchTab('tasks')" class="tab-btn px-6 py-3 font-semibold text-lg border-b-3 border-transparent text-gray-400 hover:text-gray-300 transition">
-                <i class="fas fa-check-circle mr-2"></i>All Tasks
-            </button>
-            <button onclick="switchTab('analytics')" class="tab-btn px-6 py-3 font-semibold text-lg border-b-3 border-transparent text-gray-400 hover:text-gray-300 transition">
-                <i class="fas fa-chart-bar mr-2"></i>Analytics
-            </button>
+
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard-tab" class="tab-content">
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-600/20 to-blue-700/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 group cursor-pointer" onclick="switchTab('meetings')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-blue-500/20 p-3 rounded-xl group-hover:bg-blue-500/30 transition-colors">
+                            <i class="fas fa-calendar-plus text-blue-400 text-2xl"></i>
+                        </div>
+                        <i class="fas fa-arrow-right text-blue-400 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Schedule Meeting</h3>
+                    <p class="text-gray-400 text-sm">Create and organize your next team meeting</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-600/20 to-purple-700/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 group cursor-pointer" onclick="switchTab('tasks')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-purple-500/20 p-3 rounded-xl group-hover:bg-purple-500/30 transition-colors">
+                            <i class="fas fa-tasks text-purple-400 text-2xl"></i>
+                        </div>
+                        <i class="fas fa-arrow-right text-purple-400 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Add Task</h3>
+                    <p class="text-gray-400 text-sm">Assign and track actionable items</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-600/20 to-green-700/20 backdrop-blur-sm rounded-2xl p-6 border border-green-500/20 hover:border-green-500/40 transition-all duration-300 group cursor-pointer" onclick="switchTab('analytics')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-green-500/20 p-3 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                            <i class="fas fa-chart-bar text-green-400 text-2xl"></i>
+                        </div>
+                        <i class="fas fa-arrow-right text-green-400 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">View Analytics</h3>
+                    <p class="text-gray-400 text-sm">Monitor your team's performance</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity & Upcoming -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Recent Meetings -->
+                <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <i class="fas fa-clock text-blue-400 mr-2"></i>Recent Meetings
+                        </h3>
+                        <button onclick="switchTab('meetings')" class="text-blue-400 hover:text-blue-300 text-sm font-medium">View All</button>
+                    </div>
+                    <div id="recentMeetings" class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+                            <p>No recent meetings</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Tasks -->
+                <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <i class="fas fa-list-check text-purple-400 mr-2"></i>Upcoming Tasks
+                        </h3>
+                        <button onclick="switchTab('tasks')" class="text-purple-400 hover:text-purple-300 text-sm font-medium">View All</button>
+                    </div>
+                    <div id="upcomingTasks" class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="fas fa-tasks text-4xl mb-2"></i>
+                            <p>No upcoming tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-chart-pie text-green-400 mr-2"></i>Progress Overview
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="100, 100" class="text-slate-600"></path>
+                                <path id="progressCircle" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="0, 100" class="text-green-500 transition-all duration-1000"></path>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white" id="dashboardCompletion">0%</span>
+                            </div>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-1">Task Completion</h4>
+                        <p class="text-gray-400 text-sm">Overall progress this month</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Total Tasks</span>
+                            <span class="font-bold text-white" id="dashboardTotalTasks">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Completed</span>
+                            <span class="font-bold text-green-400" id="dashboardCompletedTasks">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Pending</span>
+                            <span class="font-bold text-yellow-400" id="dashboardPendingTasks">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Overdue</span>
+                            <span class="font-bold text-red-400" id="dashboardOverdueTasks">0</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-700/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-gray-300">This Week</span>
+                                <span class="text-sm font-bold text-blue-400" id="weeklyProgress">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-600 rounded-full h-2">
+                                <div id="weeklyProgressBar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-700/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-gray-300">Team Efficiency</span>
+                                <span class="text-sm font-bold text-purple-400" id="teamEfficiency">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-600 rounded-full h-2">
+                                <div id="teamEfficiencyBar" class="bg-purple-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- MEETINGS TAB -->
-        <div id="meetings-tab" class="tab-content">
-            <!-- Add Meeting Form -->
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <div class="md:col-span-1">
-                    <div class="bg-gradient-to-br from-slate-700 to-slate-800 p-6 rounded-2xl shadow-xl border border-slate-600 sticky top-24">
-                        <h2 class="text-xl font-bold mb-4 text-white flex items-center">
-                            <i class="fas fa-plus-circle mr-2 text-green-400"></i>Create Meeting
-                        </h2>
-                        <form id="meetingForm" class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-semibold mb-2 text-gray-300">Meeting Title</label>
+        <div id="meetings-tab" class="tab-content hidden">
+            <!-- Header with Actions -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Meeting Management</h2>
+                    <p class="text-gray-400">Organize and track your team's meetings</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                    <div class="relative">
+                        <input type="text" id="meetingSearch" placeholder="Search meetings..." class="w-full lg:w-64 pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all">
+                        <i class="fas fa-search absolute left-3 top-4 text-gray-400"></i>
+                    </div>
+                    <button onclick="showQuickMeetingModal()" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i>Quick Meeting
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-4 gap-8">
+                <!-- Create Meeting Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 sticky top-24 shadow-xl">
+                        <h3 class="text-xl font-bold mb-6 text-white flex items-center">
+                            <i class="fas fa-calendar-plus mr-2 text-blue-400"></i>Create Meeting
+                        </h3>
+                        <form id="meetingForm" class="space-y-5">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-300">Meeting Title</label>
                                 <input type="text" id="meetingTitle" placeholder="e.g., Sprint Planning" required
-                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all">
                             </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-2 text-gray-300">Meeting Date</label>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-300">Meeting Date</label>
                                 <input type="date" id="meetingDate" required
-                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all">
                             </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-2 text-gray-300">Description</label>
-                                <textarea id="meetingDescription" placeholder="Meeting details..." rows="4"
-                                    class="w-full px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition resize-none"></textarea>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-300">Description</label>
+                                <textarea id="meetingDescription" placeholder="Meeting details and objectives..." rows="4"
+                                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all resize-none"></textarea>
                             </div>
-                            <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 active:scale-95">
+                            <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-check mr-2"></i>Create Meeting
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Meetings List -->
-                <div class="md:col-span-2">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-white">
-                            <i class="fas fa-list mr-2 text-blue-400"></i>Scheduled Meetings
-                        </h2>
-                        <input type="text" id="meetingSearch" placeholder="Search meetings..." 
-                            class="px-4 py-2 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none w-40">
-                    </div>
-                    <div id="meetingsList" class="space-y-4">
-                        <div class="text-center py-8 text-gray-400">
-                            <i class="fas fa-inbox text-4xl mb-2"></i>
-                            <p>No meetings yet. Create one to get started!</p>
+                <!-- Meetings Grid -->
+                <div class="lg:col-span-3">
+                    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6" id="meetingsGrid">
+                        <!-- Meetings will be populated here -->
+                        <div class="bg-gradient-to-br from-slate-800/30 to-slate-900/30 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/30 border-dashed">
+                            <div class="text-center py-12">
+                                <div class="bg-slate-700/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-calendar-plus text-2xl text-gray-400"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-white mb-2">No Meetings Yet</h3>
+                                <p class="text-gray-400 text-sm mb-4">Create your first meeting to get started</p>
+                                <button onclick="document.getElementById('meetingTitle').focus()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fas fa-plus mr-1"></i>Create One
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
